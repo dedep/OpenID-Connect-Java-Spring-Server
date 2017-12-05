@@ -80,11 +80,13 @@ public class ConnectTokenEnhancer implements TokenEnhancer {
 		ClientDetailsEntity client = clientService.loadClientByClientId(clientId);
 
 		Builder builder = new JWTClaimsSet.Builder()
-				.claim("azp", clientId)
+				.claim("client_id", clientId)
+				.claim("user_name", authentication.getName())
 				.issuer(configBean.getIssuer())
 				.issueTime(new Date())
 				.expirationTime(token.getExpiration())
 				.subject(authentication.getName())
+				.claim("scope", Lists.newArrayList(accessToken.getScope()))
 				.jwtID(UUID.randomUUID().toString()); // set a random NONCE in the middle of it
 
 		String audience = (String) authentication.getOAuth2Request().getExtensions().get("aud");
